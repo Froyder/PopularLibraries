@@ -14,38 +14,38 @@
         android:text="@string/counter_one"/>
 
     <Button
-        android:id="@+id/btn_counter1"
+        android:id="@+id/btnOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_1"
-        android:text="0" />
+        android:text="@string/zero" />
 
     <TextView
         android:id="@+id/tv_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btn_counter1"
+        app:layout_constraintTop_toBottomOf="@id/btnOne"
         android:text="@string/counter_two" />
 
     <Button
-        android:id="@+id/btn_counter2"
+        android:id="@+id/btnTwo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_2"
-        android:text="0" />
+        android:text="@string/zero" />
 
     <TextView
         android:id="@+id/tv_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btn_counter2"
+        app:layout_constraintTop_toBottomOf="@id/btnTwo"
         android:text="@string/counter_three" />
 
     <Button
-        android:id="@+id/btn_counter3"
+        android:id="@+id/btnThree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_3"
-        android:text="0" />
+        android:text="@string/zero" />
 
 </LinearLayout>
