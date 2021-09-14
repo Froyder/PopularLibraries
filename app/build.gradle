@@ -53,6 +53,10 @@ dependencies {
     apply plugin: 'kotlin-android-extensions'
     apply plugin: 'kotlin-kapt'
 
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.github.terrakok:cicerone:6.6'
+
+    //Moxy
     implementation "com.github.moxy-community:moxy:2.1.2"
     kapt "com.github.moxy-community:moxy-compiler:2.1.2"
     implementation "com.github.moxy-community:moxy-ktx:2.1.2"
