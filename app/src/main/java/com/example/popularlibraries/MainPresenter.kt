@@ -3,6 +3,7 @@ package com.example.popularlibraries
 class MainPresenter(val view: MainView, val model : CountersModel) {
 
     fun buttonOneClicked () {
+      
         model.counters[0]++
         view.setCounterOne(model.counters[0].toString())
     }
