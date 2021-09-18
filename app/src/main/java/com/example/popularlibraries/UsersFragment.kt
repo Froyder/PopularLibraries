@@ -13,8 +13,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    val app = App()
-    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(GithubUsersRepo(), app.router) }
+    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(GithubUsersRepo(), App.router) }
     var adapter: UsersRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null
@@ -27,6 +26,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     override fun onDestroyView() {
         super.onDestroyView()
         vb = null
+        
     }
 
     override fun init() {

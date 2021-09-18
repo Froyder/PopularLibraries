@@ -4,6 +4,7 @@ import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 
 class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPresenter<UsersView>() {
+
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
         override var itemClickListener: ((UserItemView) -> Unit)? = null
@@ -25,6 +26,8 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
 
         usersListPresenter.itemClickListener = { itemView ->
             //TODO: переход на экран пользователя c помощью router.navigateTo
+            val user = usersListPresenter.users[itemView.pos]
+            router.navigateTo(AndroidScreens().details(GithubUser(user.login)))
         }
     }
 

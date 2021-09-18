@@ -1,7 +1,6 @@
 package com.example.popularlibraries
 
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.popularlibraries.databinding.ActivityMainBinding
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import moxy.MvpAppCompatActivity
@@ -10,9 +9,8 @@ import moxy.ktx.moxyPresenter
 class MainActivity : MvpAppCompatActivity(), MainView {
 
     val navigator = AppNavigator(this, R.id.container)
-    val app = App()
 
-    private val presenter by moxyPresenter { MainPresenter(app.router, AndroidScreens()) }
+    private val presenter by moxyPresenter { MainPresenter(App.router, AndroidScreens()) }
     private var vb: ActivityMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,12 +21,12 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun onResumeFragments() {
         super.onResumeFragments()
-        app.navigatorHolder.setNavigator(navigator)
+        App.navigatorHolder.setNavigator(navigator)
     }
 
     override fun onPause() {
         super.onPause()
-        app.navigatorHolder.removeNavigator()
+        App.navigatorHolder.removeNavigator()
     }
 
     override fun onBackPressed() {

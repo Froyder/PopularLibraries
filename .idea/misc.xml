@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/CodingWithFun/Kotlin/PopularLibraries/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/CodingWithFun/Kotlin/PopularLibraries/app/src/main/res/layout/fragment_details.xml" value="0.18489583333333334" />
         <entry key="..\:/CodingWithFun/Kotlin/PopularLibraries/app/src/main/res/layout/fragment_users.xml" value="0.1671195652173913" />
         <entry key="..\:/CodingWithFun/Kotlin/PopularLibraries/app/src/main/res/layout/item_user.xml" value="0.25416666666666665" />
       </map>
