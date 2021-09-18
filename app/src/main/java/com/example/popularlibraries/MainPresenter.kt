@@ -1,21 +1,21 @@
 package com.example.popularlibraries
 
-class MainPresenter(val view: MainView) {
-    val model = CountersModel()
+class MainPresenter(val view: MainView, val model : CountersModel) {
 
     fun buttonOneClicked () {
-        val nextValue = model.next(0)
-        view.setButtonOneText(nextValue.toString())
+      
+        model.counters[0]++
+        view.setCounterOne(model.counters[0].toString())
     }
 
     fun buttonTwoClicked () {
-        val nextValue = model.next(1)
-        view.setButtonTwoText(nextValue.toString())
+        model.counters[1]++
+        view.setCounterTwo(model.counters[1].toString())
     }
 
     fun buttonThreeClicked () {
-        val nextValue = model.next(2)
-        view.setButtonThreeText(nextValue.toString())
+        model.counters[2]++
+        view.setCounterThree(model.counters[2].toString())
     }
 
 }

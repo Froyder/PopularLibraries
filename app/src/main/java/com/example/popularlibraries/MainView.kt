@@ -1,7 +1,7 @@
 package com.example.popularlibraries
 
 interface MainView {
-    fun setButtonOneText(text: String)
-    fun setButtonTwoText(text: String)
-    fun setButtonThreeText(text: String)
+    fun setCounterOne(text: String)
+    fun setCounterTwo(text: String)
+    fun setCounterThree(text: String)
 }
