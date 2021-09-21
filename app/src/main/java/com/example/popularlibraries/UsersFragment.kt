@@ -13,7 +13,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(GithubUsersRepo(), App.router) }
+    val presenter: UsersPresenter by moxyPresenter { UsersPresenter(GithubUsersRepo, App.router) }
     var adapter: UsersRVAdapter? = null
 
     private var vb: FragmentUsersBinding? = null

@@ -1,7 +1,10 @@
 package com.example.popularlibraries
 
 import com.github.terrakok.cicerone.Router
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
+import java.util.*
 
 class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPresenter<UsersView>() {
 
@@ -22,19 +25,28 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        loadData()
+        getUsersFromObservable()
 
         usersListPresenter.itemClickListener = { itemView ->
             //TODO: переход на экран пользователя c помощью router.navigateTo
             val user = usersListPresenter.users[itemView.pos]
-            router.navigateTo(AndroidScreens().details(GithubUser(user.login)))
+            router.navigateTo(AndroidScreens().details(user.id))
         }
     }
 
-    fun loadData() {
-        val users = usersRepo.getUsers()
-        usersListPresenter.users.addAll(users)
-        viewState.updateList()
+    private val disposableUsersList = CompositeDisposable()
+
+    private fun getUsersFromObservable () {
+        disposableUsersList.add(
+            usersRepo
+                .getUsersListObservable()
+                .subscribe({ user ->
+                    usersListPresenter.users.add(user)
+                    viewState.updateList()
+                }, { error ->
+                    println("Error: ${error.message}")
+                })
+        )
     }
 
     fun backPressed(): Boolean {

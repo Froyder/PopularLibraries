@@ -1,15 +1,28 @@
 package com.example.popularlibraries
 
-class GithubUsersRepo {
+import io.reactivex.rxjava3.core.Observable
+
+object GithubUsersRepo {
+
     private val repositories = listOf(
-        GithubUser("login1"),
-        GithubUser("login2"),
-        GithubUser("login3"),
-        GithubUser("login4"),
-        GithubUser("login5")
+        GithubUser(1, "login1"),
+        GithubUser(2, "login2"),
+        GithubUser(3, "login3"),
+        GithubUser(4, "login4"),
+        GithubUser(5, "login5")
     )
 
-    fun getUsers() : List<GithubUser> {
+    fun getUsers(): List<GithubUser> {
         return repositories
     }
+
+    fun getUsersListObservable(): Observable<GithubUser> {
+        return Observable.fromIterable(repositories)
+    }
+
+    fun getUserDataObservable(userID: Long): Observable<GithubUser> {
+        val user = repositories.first { u -> u.id == userID }
+        return Observable.just(user)
+    }
+
 }
