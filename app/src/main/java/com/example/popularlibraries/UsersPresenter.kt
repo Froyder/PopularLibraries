@@ -28,7 +28,6 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
         getUsersFromObservable()
 
         usersListPresenter.itemClickListener = { itemView ->
-            //TODO: переход на экран пользователя c помощью router.navigateTo
             val user = usersListPresenter.users[itemView.pos]
             router.navigateTo(AndroidScreens().details(user.id))
         }
@@ -40,13 +39,18 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
         disposableUsersList.add(
             usersRepo
                 .getUsersListObservable()
-                .subscribe({ user ->
-                    usersListPresenter.users.add(user)
+                .subscribe({ usersList ->
+                    usersListPresenter.users.addAll(usersList)
                     viewState.updateList()
                 }, { error ->
                     println("Error: ${error.message}")
                 })
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposableUsersList.dispose()
     }
 
     fun backPressed(): Boolean {
