@@ -3,7 +3,8 @@ package com.example.popularlibraries
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPresenter<UsersView>() {
+class UsersPresenter(private val usersRepo: GithubUsersRepo, private val router: Router)
+            : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
