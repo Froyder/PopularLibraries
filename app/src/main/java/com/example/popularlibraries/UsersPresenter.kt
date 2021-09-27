@@ -1,12 +1,13 @@
 package com.example.popularlibraries
 
 import com.github.terrakok.cicerone.Router
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import java.util.*
 
-class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPresenter<UsersView>() {
+class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo, val router: Router,
+                     val screens: IScreens) : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -16,7 +17,8 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
 
         override fun bindView(view: UserItemView) {
             val user = users[view.pos]
-            view.setLogin(user.login)
+            user.login?.let { view.setLogin(it) }
+            user.avatarUrl?.let {view.loadAvatar(it)}
         }
     }
 
@@ -25,26 +27,27 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.init()
-        getUsersFromObservable()
+        getUsersFromNet()
 
         usersListPresenter.itemClickListener = { itemView ->
             //TODO: переход на экран пользователя c помощью router.navigateTo
             val user = usersListPresenter.users[itemView.pos]
-            router.navigateTo(AndroidScreens().details(user.id))
+            router.navigateTo(screens.details(user))
         }
     }
 
     private val disposableUsersList = CompositeDisposable()
 
-    private fun getUsersFromObservable () {
+    private fun getUsersFromNet () {
         disposableUsersList.add(
-            usersRepo
-                .getUsersListObservable()
-                .subscribe({ user ->
-                    usersListPresenter.users.add(user)
+            usersRepo.getUsers()
+                .observeOn(uiScheduler)
+                .subscribe({ repos ->
+                    usersListPresenter.users.clear()
+                    usersListPresenter.users.addAll(repos)
                     viewState.updateList()
-                }, { error ->
-                    println("Error: ${error.message}")
+                }, {
+                    println("Error: ${it.message}")
                 })
         )
     }
@@ -52,6 +55,11 @@ class UsersPresenter(val usersRepo: GithubUsersRepo, val router: Router) : MvpPr
     fun backPressed(): Boolean {
         router.exit()
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposableUsersList.dispose()
     }
 
 }

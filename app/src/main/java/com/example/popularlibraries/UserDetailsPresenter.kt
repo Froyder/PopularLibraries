@@ -4,22 +4,11 @@ import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 
-class UserDetailsPresenter (private val router: Router, val userID: Long) : MvpPresenter<UserDetailsView>() {
+class UserDetailsPresenter (private val router: Router, private val user: GithubUser?) : MvpPresenter<UserDetailsView>() {
 
-    private val usersRepo = GithubUsersRepo
-
-    fun getUserData() {
-        usersRepo
-            .getUserDataObservable(userID)
-            .subscribe({ user ->
-                sendUserDataToFragment (user)
-            }, { error ->
-                println("Error: ${error.message}")
-            })
-    }
-
-    private fun sendUserDataToFragment(user: GithubUser) {
-        viewState.setUserData(user)
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        user?.login?.let { viewState.setUserData(user) }
     }
 
     fun backPressed(): Boolean {
