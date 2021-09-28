@@ -6,8 +6,13 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 import java.util.*
 
-class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo, val router: Router,
-                     val screens: IScreens) : MvpPresenter<UsersView>() {
+class UsersPresenter(
+    private val uiScheduler: Scheduler,
+    private val usersRepo: IGithubUsersRepo,
+    private val router: Router,
+    private val screens: IScreens
+    )
+    : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()
@@ -42,13 +47,12 @@ class UsersPresenter(val uiScheduler: Scheduler, val usersRepo: IGithubUsersRepo
         disposableUsersList.add(
             usersRepo.getUsers()
                 .observeOn(uiScheduler)
-                .subscribe({ repos ->
+                .doOnError { println("Error: ${it.message}") }
+                .subscribe { repos ->
                     usersListPresenter.users.clear()
                     usersListPresenter.users.addAll(repos)
                     viewState.updateList()
-                }, {
-                    println("Error: ${it.message}")
-                })
+                }
         )
     }
 

@@ -6,8 +6,11 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.popularlibraries.databinding.ItemUserBinding
 
-class UsersRVAdapter(val presenter: IUserListPresenter, val imageLoader: IImageLoader<ImageView>)
-        : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
+class UsersRVAdapter(
+    private val presenter: IUserListPresenter,
+    private val imageLoader: IImageLoader<ImageView>
+    )
+    : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)).apply {

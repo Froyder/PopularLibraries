@@ -1,20 +1,19 @@
 package com.example.popularlibraries
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.popularlibraries.databinding.FragmentUsersBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
+class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersView, BackButtonListener {
+
     companion object {
         fun newInstance() = UsersFragment()
     }
 
-    val presenter: UsersPresenter by moxyPresenter {
+    private val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter(
             AndroidSchedulers.mainThread(),
             RetrofitGithubUsersRepo(ApiHolder.api),
@@ -22,25 +21,14 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         )
     }
 
-    var adapter: UsersRVAdapter? = null
+    private var adapter: UsersRVAdapter? = null
 
-    private var vb: FragmentUsersBinding? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        FragmentUsersBinding.inflate(inflater, container, false).also {
-            vb = it
-        }.root
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        vb = null
-        
-    }
+    private val viewBinding: FragmentUsersBinding by viewBinding()
 
     override fun init() {
-        vb?.rvUsers?.layoutManager = LinearLayoutManager(context)
+        viewBinding.rvUsers.layoutManager = LinearLayoutManager(context)
         adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
-        vb?.rvUsers?.adapter = adapter
+        viewBinding.rvUsers.adapter = adapter
     }
 
     override fun updateList() {
