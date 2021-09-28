@@ -1,34 +1,36 @@
 package com.example.popularlibraries
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.popularlibraries.databinding.ActivityMainBinding
+import com.github.terrakok.cicerone.androidx.AppNavigator
+import moxy.MvpAppCompatActivity
+import moxy.ktx.moxyPresenter
 
-import kotlinx.android.synthetic.main.activity_main.*
+class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainView {
 
-class MainActivity : AppCompatActivity(), MainView {
+    private val navigator = AppNavigator(this, R.id.container)
 
-    val presenter = MainPresenter(this, CountersModel)
+    private val presenter by moxyPresenter { MainPresenter(App.router, AndroidScreens()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    private val viewBinding: ActivityMainBinding by viewBinding(R.id.container)
 
-        btnOne.setOnClickListener { presenter.buttonOneClicked() }
-
-        btnTwo.setOnClickListener { presenter.buttonTwoClicked() }
-
-        btnThree.setOnClickListener { presenter.buttonThreeClicked() }
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        App.navigatorHolder.setNavigator(navigator)
     }
 
-    override fun setCounterOne(text: String) {
-        btnOne.text = text
+    override fun onPause() {
+        super.onPause()
+        App.navigatorHolder.removeNavigator()
     }
 
-    override fun setCounterTwo(text: String) {
-        btnTwo.text = text
-    }
-
-    override fun setCounterThree(text: String) {
-        btnThree.text = text
+    override fun onBackPressed() {
+        supportFragmentManager.fragments.forEach {
+            if(it is BackButtonListener && it.backPressed()){
+                return
+            }
+        }
+        presenter.backClicked()
     }
 }
