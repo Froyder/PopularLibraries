@@ -4,7 +4,6 @@ import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
-import java.util.*
 
 class UsersPresenter(
     private val uiScheduler: Scheduler,
@@ -37,7 +36,7 @@ class UsersPresenter(
         usersListPresenter.itemClickListener = { itemView ->
             //TODO: переход на экран пользователя c помощью router.navigateTo
             val user = usersListPresenter.users[itemView.pos]
-            router.navigateTo(screens.details(user))
+            router.navigateTo(screens.userDetails(user))
         }
     }
 

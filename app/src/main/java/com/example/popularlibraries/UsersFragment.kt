@@ -1,5 +1,6 @@
 package com.example.popularlibraries
 
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.popularlibraries.databinding.FragmentUsersBinding
@@ -10,14 +11,14 @@ import moxy.ktx.moxyPresenter
 class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersView, BackButtonListener {
 
     companion object {
-        fun newInstance() = UsersFragment()
+        fun newInstance(): Fragment = UsersFragment()
     }
 
     private val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter(
             AndroidSchedulers.mainThread(),
             RetrofitGithubUsersRepo(ApiHolder.api),
-            App.router, AndroidScreens(),
+            CiceroneObject.router, AndroidScreens(),
         )
     }
 
