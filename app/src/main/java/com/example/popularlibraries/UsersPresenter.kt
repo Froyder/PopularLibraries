@@ -6,11 +6,13 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 
 class UsersPresenter(
+    private val networkStatus: AndroidNetworkStatus,
     private val uiScheduler: Scheduler,
     private val usersRepo: IGithubUsersRepo,
+    private val usersRepoList: IGithubUserReposList,
     private val router: Router,
     private val screens: IScreens
-    )
+)
     : MvpPresenter<UsersView>() {
 
     class UsersListPresenter : IUserListPresenter {
@@ -34,9 +36,9 @@ class UsersPresenter(
         getUsersFromNet()
 
         usersListPresenter.itemClickListener = { itemView ->
-            //TODO: переход на экран пользователя c помощью router.navigateTo
             val user = usersListPresenter.users[itemView.pos]
-            router.navigateTo(screens.userDetails(user))
+            getUserRepoList(user)
+            router.navigateTo(screens.userDetails(networkStatus, user, Database.getInstance()))
         }
     }
 
@@ -47,16 +49,30 @@ class UsersPresenter(
             usersRepo.getUsers()
                 .observeOn(uiScheduler)
                 .doOnError { println("Error: ${it.message}") }
-                .subscribe { repos ->
-                    usersListPresenter.users.clear()
-                    usersListPresenter.users.addAll(repos)
-                    viewState.updateList()
+                .subscribe { users ->
+                    onUsersListComplete(users)
                 }
         )
     }
 
+    private fun onUsersListComplete(users: List<GithubUser>) {
+        usersListPresenter.users.clear()
+        usersListPresenter.users.addAll(users)
+        for (user in users) { getUserRepoList(user)}
+        viewState.updateList()
+    }
+
+    private fun getUserRepoList(user: GithubUser) {
+        disposableUsersList.add(
+            usersRepoList.getUserRepoList(user)
+                .observeOn(uiScheduler)
+                .doOnError { println("Error: ${it.message}") }
+                .subscribe()
+        )
+    }
+
     fun backPressed(): Boolean {
-        router.exit()
+        router.finishChain()
         return true
     }
 

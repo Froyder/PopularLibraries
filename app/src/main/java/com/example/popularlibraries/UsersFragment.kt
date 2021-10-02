@@ -8,17 +8,20 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersView, BackButtonListener {
+class UsersFragment (private val networkStatus: AndroidNetworkStatus) : MvpAppCompatFragment(R.layout.fragment_users), UsersView, BackButtonListener {
 
     companion object {
-        fun newInstance(): Fragment = UsersFragment()
+        fun newInstance(networkStatus: AndroidNetworkStatus): Fragment = UsersFragment(networkStatus)
     }
 
     private val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter(
+            networkStatus,
             AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(ApiHolder.api),
-            CiceroneObject.router, AndroidScreens(),
+            RetrofitGithubUsersRepo(ApiHolder.api, networkStatus, Database.getInstance()),
+            RetrofitGithubUserReposList(ApiHolder.api, networkStatus, Database.getInstance()),
+            CiceroneObject.router,
+            AndroidScreens()
         )
     }
 

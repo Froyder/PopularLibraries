@@ -6,21 +6,28 @@ import com.example.popularlibraries.databinding.FragmentRepoDetailsBinding
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class RepoDetailsFragment (private val user: GithubUser, private val repo: UserRepo) :
+class RepoDetailsFragment (
+    private val networkStatus : AndroidNetworkStatus,
+    private val user: GithubUser,
+    private val repo: UserRepo
+    ) :
     MvpAppCompatFragment(R.layout.fragment_repo_details), RepoView, BackButtonListener {
 
     private val viewBinding: FragmentRepoDetailsBinding by viewBinding()
 
     private val presenter by moxyPresenter {
         RepoDetailsPresenter(
+            networkStatus,
             repo,
             user,
             CiceroneObject.router,
-            AndroidScreens())
+            AndroidScreens(),
+        )
     }
 
     companion object {
-        fun newInstance(user : GithubUser, repo: UserRepo): Fragment = RepoDetailsFragment(user, repo)
+        fun newInstance(networkStatus : AndroidNetworkStatus, user: GithubUser, repo: UserRepo): Fragment
+            = RepoDetailsFragment(networkStatus, user, repo)
     }
 
     override fun setRepoDetails(repo: UserRepo) {

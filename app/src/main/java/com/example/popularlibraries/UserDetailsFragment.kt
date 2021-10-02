@@ -10,16 +10,25 @@ import kotlinx.android.synthetic.main.fragment_details.*
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class UserDetailsFragment(private val user: GithubUser) :
+class UserDetailsFragment(
+    private val networkStatus : AndroidNetworkStatus,
+    private val user: GithubUser,
+    private val db: Database
+    ) :
     MvpAppCompatFragment(R.layout.fragment_details), BackButtonListener, UserDetailsView {
 
     companion object {
-        fun newInstance(user: GithubUser): Fragment = UserDetailsFragment(user)
+        fun newInstance(
+            networkStatus: AndroidNetworkStatus,
+            user: GithubUser,
+            db: Database
+        ): Fragment = UserDetailsFragment(networkStatus, user, db)
     }
 
     private val presenter by moxyPresenter {
         UserDetailsPresenter(
-            RetrofitGithubUsersRepo(ApiHolder.api),
+            networkStatus,
+            RetrofitGithubUserReposList(ApiHolder.api, networkStatus, db),
             CiceroneObject.router,
             user,
             AndroidSchedulers.mainThread(),
