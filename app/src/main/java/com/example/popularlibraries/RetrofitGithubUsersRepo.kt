@@ -4,9 +4,10 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class RetrofitGithubUsersRepo(
-    val api: IDataSource,
+    private val api: IDataSource,
     val networkStatus: INetworkStatus,
-    val db: Database
+    val db: Database,
+    private val usersCache: IUsersCache
     ) : IGithubUsersRepo {
     override fun getUsers() = networkStatus.isOnlineSingle().flatMap { isOnline ->
         if (isOnline) {
@@ -21,22 +22,14 @@ class RetrofitGithubUsersRepo(
                                 user.repoListUrl ?: ""
                             )
                         }
-                        db.userDao.insert(roomUsers)
+                        usersCache.setCachedData(roomUsers)
                         users
                     }
                 }, { error ->
-                    getCachedData()
+                    usersCache.getCachedData()
                 })
         } else {
-            getCachedData()
+            usersCache.getCachedData()
         }
     }.subscribeOn(Schedulers.io())
-
-    override fun getCachedData(): Single<List<GithubUser>> {
-        return Single.fromCallable {
-            db.userDao.getAll().map { roomUser ->
-                GithubUser(roomUser.id, roomUser.login, roomUser.avatarUrl, roomUser.reposUrl)
-            }
-        }
-    }
 }

@@ -25,10 +25,12 @@ class UserDetailsFragment(
         ): Fragment = UserDetailsFragment(networkStatus, user, db)
     }
 
+    private val userReposList = RoomRepositoriesCache.getInstance()
+
     private val presenter by moxyPresenter {
         UserDetailsPresenter(
             networkStatus,
-            RetrofitGithubUserReposList(ApiHolder.api, networkStatus, db),
+            RetrofitGithubUserReposList(ApiHolder.api, networkStatus, db, userReposList),
             CiceroneObject.router,
             user,
             AndroidSchedulers.mainThread(),

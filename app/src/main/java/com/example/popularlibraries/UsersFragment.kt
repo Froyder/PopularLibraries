@@ -14,12 +14,15 @@ class UsersFragment (private val networkStatus: AndroidNetworkStatus) : MvpAppCo
         fun newInstance(networkStatus: AndroidNetworkStatus): Fragment = UsersFragment(networkStatus)
     }
 
+    private val usersCache: RoomUserCache = RoomUserCache.getInstance()
+    private val userReposList = RoomRepositoriesCache.getInstance()
+
     private val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter(
             networkStatus,
             AndroidSchedulers.mainThread(),
-            RetrofitGithubUsersRepo(ApiHolder.api, networkStatus, Database.getInstance()),
-            RetrofitGithubUserReposList(ApiHolder.api, networkStatus, Database.getInstance()),
+            RetrofitGithubUsersRepo(ApiHolder.api, networkStatus, Database.getInstance(),usersCache),
+            RetrofitGithubUserReposList(ApiHolder.api, networkStatus, Database.getInstance(),userReposList),
             CiceroneObject.router,
             AndroidScreens()
         )

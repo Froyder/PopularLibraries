@@ -4,9 +4,10 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class RetrofitGithubUserReposList (
-    val api: IDataSource,
+    private val api: IDataSource,
     val networkStatus: INetworkStatus,
-    val db: Database
+    val db: Database,
+    private val userReposList: IRepositoriesCache
     ): IGithubUserReposList {
     override fun getUserRepoList(user: GithubUser) = networkStatus.isOnlineSingle().flatMap { isOnline ->
         if (isOnline) {
@@ -26,26 +27,15 @@ class RetrofitGithubUserReposList (
                                         it.createdAt ?: ""
                                     )
                                 }
-                                db.repositoryDao.insert(roomRepos)
+                                userReposList.setCachedData(roomRepos)
                                 repositories
                             }
                         }, {error->
-                            getCachedData(user)
+                            userReposList.getCachedData(user)
                         })
                 } ?: Single.error<List<UserRepo>>(RuntimeException("User has no repos url")).subscribeOn(Schedulers.io())
         } else {
-            getCachedData(user)
+            userReposList.getCachedData(user)
         }
     }.subscribeOn(Schedulers.io())
-
-    override fun getCachedData(user: GithubUser): Single<List<UserRepo>> {
-        return Single.fromCallable {
-            val roomUser = user.login?.let { db.userDao.findByLogin(it) } ?: throw RuntimeException("No such user in cache")
-            db.repositoryDao.findForUser(roomUser.id)
-                .map {
-                    UserRepo(it.id, it.name, it.language, it.forksCount, it.createdAt)
-                }
-        }
-    }
-
 }
