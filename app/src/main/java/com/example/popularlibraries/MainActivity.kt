@@ -11,6 +11,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainView {
     private val navigator = AppNavigator(this, R.id.container)
 
     private val presenter by moxyPresenter { MainPresenter(CiceroneObject.router, AndroidScreens()) }
+
     private val viewBinding: ActivityMainBinding by viewBinding(R.id.container)
 
     override fun onResumeFragments() {

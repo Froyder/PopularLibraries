@@ -5,6 +5,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpPresenter
 
+
 class UsersPresenter(
     private val uiScheduler: Scheduler,
     private val usersRepo: IGithubUsersRepo,
@@ -12,6 +13,7 @@ class UsersPresenter(
     private val screens: IScreens
     )
     : MvpPresenter<UsersView>() {
+
 
     class UsersListPresenter : IUserListPresenter {
         val users = mutableListOf<GithubUser>()

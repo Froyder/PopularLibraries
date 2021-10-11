@@ -3,6 +3,7 @@ package com.example.popularlibraries
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+
 import com.example.popularlibraries.databinding.FragmentUsersBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
@@ -13,6 +14,7 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersView, 
     companion object {
         fun newInstance(): Fragment = UsersFragment()
     }
+
 
     private val presenter: UsersPresenter by moxyPresenter {
         UsersPresenter(
@@ -28,7 +30,9 @@ class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersView, 
 
     override fun init() {
         viewBinding.rvUsers.layoutManager = LinearLayoutManager(context)
+
         adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+
         viewBinding.rvUsers.adapter = adapter
     }
 

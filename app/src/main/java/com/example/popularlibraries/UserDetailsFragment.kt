@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.popularlibraries.databinding.FragmentDetailsBinding
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_details.*
 import moxy.MvpAppCompatFragment
@@ -16,6 +17,7 @@ class UserDetailsFragment(private val user: GithubUser) :
     companion object {
         fun newInstance(user: GithubUser): Fragment = UserDetailsFragment(user)
     }
+
 
     private val presenter by moxyPresenter {
         UserDetailsPresenter(

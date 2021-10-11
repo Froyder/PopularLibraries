@@ -62,6 +62,7 @@ class UserDetailsPresenter(
 
     private fun onReturnError(throwable: Throwable) {
         viewState.onLoadingRepoListError(throwable)
+
     }
 
     fun backPressed(): Boolean {
