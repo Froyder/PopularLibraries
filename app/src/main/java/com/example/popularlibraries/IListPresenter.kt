@@ -7,3 +7,4 @@ interface IListPresenter<V : IItemView> {
 }
 
 interface IUserListPresenter : IListPresenter<UserItemView>
+interface IRepoListPresenter : IListPresenter<RepoItemView>

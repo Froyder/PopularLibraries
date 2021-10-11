@@ -1,28 +1,38 @@
 package com.example.popularlibraries
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.example.popularlibraries.databinding.FragmentDetailsBinding
+
 import com.example.popularlibraries.databinding.FragmentUsersBinding
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
 class UsersFragment : MvpAppCompatFragment(R.layout.fragment_users), UsersView, BackButtonListener {
+
     companion object {
-        fun newInstance() = UsersFragment()
+        fun newInstance(): Fragment = UsersFragment()
     }
 
-    private val presenter: UsersPresenter by moxyPresenter { UsersPresenter(GithubUsersRepo(), App.router) }
+
+    private val presenter: UsersPresenter by moxyPresenter {
+        UsersPresenter(
+            AndroidSchedulers.mainThread(),
+            RetrofitGithubUsersRepo(ApiHolder.api),
+            CiceroneObject.router, AndroidScreens(),
+        )
+    }
+
     private var adapter: UsersRVAdapter? = null
 
     private val viewBinding: FragmentUsersBinding by viewBinding()
 
     override fun init() {
         viewBinding.rvUsers.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter)
+
+        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+
         viewBinding.rvUsers.adapter = adapter
     }
 
